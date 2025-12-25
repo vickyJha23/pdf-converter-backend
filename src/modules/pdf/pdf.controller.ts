@@ -1,7 +1,9 @@
-import { Controller, Get, Param, Post, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { Controller, Get, Param, Post, UploadedFiles, UseInterceptors, Res } from "@nestjs/common";
 import { PdfService } from "./pdf.service";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { multerOptions } from "src/config";
+import type { Response } from "express";
+import path from "path";
 
 
 @Controller('pdf')
@@ -20,7 +22,11 @@ export class PdfController {
      } 
 
     @Get("download/:jobId")
-    async downloadPdf(@Param("jodId") jobId: string) {
-        return this.pdfService.downloadPdf(jobId)
+    async downloadPdf(@Param("jobId") jobId: string, @Res() res:Response) {
+         console.log("jobId", jobId);
+         const { filePath } = await this.pdfService.downloadPdf(jobId);
+         res.setHeader('Content-Disposition', `attachment; filename=${filePath.split('\\').pop()}`); 
+         const absolutePath = path.resolve(filePath);
+         res.sendFile(absolutePath);  
     }
 }

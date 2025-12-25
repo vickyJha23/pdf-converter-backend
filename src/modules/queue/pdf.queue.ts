@@ -11,8 +11,10 @@ export class PdfQueue {
      constructor () {
          this.queue = new Queue(PDF_QUEUE, {connection: redisConfig})
      }
-     addMergeJob(files: string []) {
-           return this.queue.add(MERGE_JOB, {files}) 
+     addMergeJob(jobId: string, files: string []) {
+           return this.queue.add(MERGE_JOB, {
+            jobId: jobId,
+            files}) 
      }
 
     async getJobStatus(jobId: string) {
@@ -21,7 +23,6 @@ export class PdfQueue {
              throw new NotFoundException("Job Not Found") 
         }
         const state = await job.getState();
-        console.log(job);
 
         return {
              jobId: job.id,
