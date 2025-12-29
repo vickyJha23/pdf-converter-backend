@@ -15,11 +15,12 @@ import { JobEntity } from "../jobs/jobs.entity";
                     password: databaseConfig.password,
                     database: databaseConfig.database,
                     entities: [JobEntity],
-                    synchronize: true,
+                    synchronize: false,
               })
         })
      ],
 })
+
 
 
 export class DatabaseModule {}

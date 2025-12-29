@@ -2,9 +2,8 @@ import { PDFDocument } from "pdf-lib";
 import * as fs from "fs"; 
 
 
-
 export class MergeService {
-    async merge(files: string[]):Promise<Buffer> {
+async merge(files: string[]):Promise<Buffer> {
          // create a pdf document
          const pdf = await PDFDocument.create();
          for(const file of files) {

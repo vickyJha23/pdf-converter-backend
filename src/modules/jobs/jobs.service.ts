@@ -20,7 +20,7 @@ async createJob(type: string, inputPath:string): Promise<JobEntity> {
         return this.jobRepo.save(job);
     }
 
-   async updateStatus(jobId:string, status: JobStatus, result?:any) {
+   async updateStatus(jobId:string, status: JobStatus, result?:any, progress?:number, errorMessage?:string): Promise<void> {
         const job = await this.jobRepo.findOne({
              where: {
                  id: jobId
@@ -30,9 +30,17 @@ async createJob(type: string, inputPath:string): Promise<JobEntity> {
              throw new NotFoundException("Job Not Found");
         }
         job.status = status;
-        if(result) {
+        console.log('Updating job status to:', result, progress, errorMessage);
+        if(result ) {
             job.outputPath = result
         }
+        if(errorMessage) { 
+            job.errorMessage = errorMessage;
+        }
+        if(progress) {
+            job.progress = progress;
+        }
+
         await this.jobRepo.save(job);
    } 
 }
